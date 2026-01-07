@@ -51,7 +51,7 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 
 ### Phase 1: 프로젝트 초기 설정
 - [x] Next.js 프로젝트 생성
-- [ ] Tailwind CSS + shadcn/ui 설정
+- [x] Tailwind CSS + shadcn/ui 설정
 - [ ] Docker Compose로 PostgreSQL 설정
 - [ ] Prisma 설정 및 스키마 작성
 - [ ] 환경변수 설정 (.env)
