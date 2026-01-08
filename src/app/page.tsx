@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ImageUploader } from "@/components/ImageUploader";
 import { ImagePreview } from "@/components/ImagePreview";
 import { DataTable } from "@/components/DataTable";
@@ -110,10 +111,20 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-8 px-4 max-w-6xl">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold">LoL 사설 게임 데이터 아카이브</h1>
-          <p className="text-muted-foreground mt-2">
-            게임 결과 스크린샷을 업로드하여 데이터를 추출하고 저장하세요
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">LoL 사설 게임 데이터 아카이브</h1>
+              <p className="text-muted-foreground mt-2">
+                게임 결과 스크린샷을 업로드하여 데이터를 추출하고 저장하세요
+              </p>
+            </div>
+            <Link
+              href="/games"
+              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
+            >
+              게임 기록 조회
+            </Link>
+          </div>
         </header>
 
         <main className="space-y-6">
