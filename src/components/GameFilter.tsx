@@ -12,7 +12,6 @@ interface GameFilterProps {
 }
 
 const LANES = ["", "탑", "정글", "미드", "원딜", "서폿"];
-const RESULTS = ["", "승리", "패배"];
 
 export function GameFilter({ onSearch, isLoading }: GameFilterProps) {
   const [filter, setFilter] = useState<GameFilterType>({
@@ -74,22 +73,6 @@ export function GameFilter({ onSearch, isLoading }: GameFilterProps) {
             {LANES.slice(1).map((lane) => (
               <option key={lane} value={lane}>
                 {lane}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-[100px]">
-          <label className="block text-sm font-medium mb-1">승패</label>
-          <select
-            value={filter.result}
-            onChange={(e) => handleChange("result", e.target.value)}
-            className="w-full h-9 px-3 border rounded-md bg-background text-sm"
-          >
-            <option value="">전체</option>
-            {RESULTS.slice(1).map((result) => (
-              <option key={result} value={result}>
-                {result}
               </option>
             ))}
           </select>
