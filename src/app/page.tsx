@@ -14,6 +14,8 @@ export default function Home() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractedData, setExtractedData] = useState<GameData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const handleImageSelect = (file: File, previewUrl: string) => {
     setSelectedFile(file);
@@ -73,6 +75,37 @@ export default function Home() {
     setExtractedData(newData);
   };
 
+  const handleSave = async () => {
+    if (!extractedData) return;
+
+    setIsSaving(true);
+    setError(null);
+    setSaveSuccess(false);
+
+    try {
+      const response = await fetch("/api/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(extractedData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSaveSuccess(true);
+      } else {
+        setError(result.error || "데이터 저장에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("저장 실패:", err);
+      setError("데이터 저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto py-8 px-4 max-w-6xl">
@@ -103,10 +136,28 @@ export default function Home() {
               )}
 
               {extractedData && (
-                <DataTable
-                  data={extractedData}
-                  onChange={handleDataChange}
-                />
+                <>
+                  <DataTable
+                    data={extractedData}
+                    onChange={handleDataChange}
+                  />
+
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving || saveSuccess}
+                      className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {isSaving ? "저장 중..." : saveSuccess ? "저장 완료" : "DB에 저장"}
+                    </button>
+
+                    {saveSuccess && (
+                      <span className="text-green-600 font-medium">
+                        데이터가 성공적으로 저장되었습니다!
+                      </span>
+                    )}
+                  </div>
+                </>
               )}
             </>
           )}
