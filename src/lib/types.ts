@@ -30,3 +30,30 @@ export interface ExtractResult {
   error?: string;
   rawResponse?: string;
 }
+
+// DB에서 조회한 게임 데이터 (id, createdAt 포함)
+export interface GameRecord {
+  id: number;
+  gameTime: string;
+  result: string;
+  createdAt: string;
+}
+
+// DB에서 조회한 플레이어 데이터 (id, gameId 포함)
+export interface PlayerRecord extends PlayerData {
+  id: number;
+  gameId: number;
+}
+
+// 게임 + 플레이어 조합 타입
+export interface GameWithPlayers extends GameRecord {
+  players: PlayerRecord[];
+}
+
+// 필터 타입
+export interface GameFilter {
+  summonerName: string;
+  champion: string;
+  lane: string;
+  result: string;
+}
