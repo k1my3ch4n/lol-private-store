@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { GameFilter } from "@/components/GameFilter";
 import { GameList } from "@/components/GameList";
-import { GameWithPlayers, GameFilter as GameFilterType } from "@/lib/types";
+import { GameWithPlayers, GameFilter as GameFilterType, PlayerStats } from "@/lib/types";
 
 export default function GamesPage() {
   const [games, setGames] = useState<GameWithPlayers[]>([]);
+  const [stats, setStats] = useState<PlayerStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<GameFilterType>({
@@ -33,6 +34,7 @@ export default function GamesPage() {
 
       if (result.success) {
         setGames(result.data);
+        setStats(result.stats || null);
       } else {
         setError(result.error || "데이터를 불러오는데 실패했습니다.");
       }
@@ -87,7 +89,7 @@ export default function GamesPage() {
               로딩 중...
             </div>
           ) : (
-            <GameList games={games} filter={currentFilter} />
+            <GameList games={games} filter={currentFilter} stats={stats} />
           )}
         </main>
       </div>
