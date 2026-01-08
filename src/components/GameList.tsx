@@ -40,9 +40,9 @@ export function GameList({ games, filter, stats }: GameListProps) {
     });
   };
 
-  // 필터 조건에 맞는 플레이어 찾기
-  const getMatchedPlayer = (game: GameWithPlayers) => {
-    return game.players.find((p) => {
+  // 필터 조건에 맞는 플레이어들 찾기 (라인 검색 시 여러 명 반환)
+  const getMatchedPlayers = (game: GameWithPlayers) => {
+    return game.players.filter((p) => {
       const matchSummoner = !filter?.summonerName ||
         p.summonerName.toLowerCase().includes(filter.summonerName.toLowerCase());
       const matchChampion = !filter?.champion ||
@@ -76,54 +76,61 @@ export function GameList({ games, filter, stats }: GameListProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {games.map((game) => {
-                const player = getMatchedPlayer(game);
-                if (!player) return null;
+              {games.flatMap((game) => {
+                const matchedPlayers = getMatchedPlayers(game);
+                if (matchedPlayers.length === 0) return [];
 
                 const duration = game.gameDurationSeconds || 0;
-                const gpm = calculateGpm(player.gold, duration);
-                const dpm = calculateDpm(player.damage, duration);
-                const kda = player.deaths > 0
-                  ? ((player.kills + player.assists) / player.deaths).toFixed(1)
-                  : (player.kills + player.assists).toString();
 
-                return (
-                  <TableRow key={`${game.id}-${player.id}`}>
-                    <TableCell className="text-sm">
-                      {formatDate(game.createdAt)}
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={
-                          game.result === "승리"
-                            ? "text-blue-600 font-medium"
-                            : "text-red-600 font-medium"
-                        }
-                      >
-                        {game.result === "승리" ? "승" : "패"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="font-medium text-sm">{player.champion}</TableCell>
-                    <TableCell className="text-sm">{player.lane}</TableCell>
-                    <TableCell className="text-sm">{player.summonerName}</TableCell>
-                    <TableCell className="text-sm">
-                      <span className="text-blue-600">{player.kills}</span>
-                      <span className="text-muted-foreground">/</span>
-                      <span className="text-red-600">{player.deaths}</span>
-                      <span className="text-muted-foreground">/</span>
-                      <span className="text-green-600">{player.assists}</span>
-                    </TableCell>
-                    <TableCell className="text-sm text-right font-medium">
-                      {kda}
-                    </TableCell>
-                    <TableCell className="text-sm text-right">
-                      {gpm}
-                    </TableCell>
-                    <TableCell className="text-sm text-right">
-                      {dpm}
-                    </TableCell>
-                  </TableRow>
-                );
+                return matchedPlayers.map((player) => {
+                  const gpm = calculateGpm(player.gold, duration);
+                  const dpm = calculateDpm(player.damage, duration);
+                  const kda = player.deaths > 0
+                    ? ((player.kills + player.assists) / player.deaths).toFixed(1)
+                    : (player.kills + player.assists).toString();
+
+                  // 플레이어가 아군(team 1)인지에 따라 승패 결정
+                  const isWin = (player.team === 1 && game.result === "승리") ||
+                                (player.team === 2 && game.result === "패배");
+
+                  return (
+                    <TableRow key={`${game.id}-${player.id}`}>
+                      <TableCell className="text-sm">
+                        {formatDate(game.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={
+                            isWin
+                              ? "text-blue-600 font-medium"
+                              : "text-red-600 font-medium"
+                          }
+                        >
+                          {isWin ? "승" : "패"}
+                        </span>
+                      </TableCell>
+                      <TableCell className="font-medium text-sm">{player.champion}</TableCell>
+                      <TableCell className="text-sm">{player.lane}</TableCell>
+                      <TableCell className="text-sm">{player.summonerName}</TableCell>
+                      <TableCell className="text-sm">
+                        <span className="text-blue-600">{player.kills}</span>
+                        <span className="text-muted-foreground">/</span>
+                        <span className="text-red-600">{player.deaths}</span>
+                        <span className="text-muted-foreground">/</span>
+                        <span className="text-green-600">{player.assists}</span>
+                      </TableCell>
+                      <TableCell className="text-sm text-right font-medium">
+                        {kda}
+                      </TableCell>
+                      <TableCell className="text-sm text-right">
+                        {gpm}
+                      </TableCell>
+                      <TableCell className="text-sm text-right">
+                        {dpm}
+                      </TableCell>
+                    </TableRow>
+                  );
+                });
               })}
             </TableBody>
           </Table>
@@ -199,24 +206,8 @@ export function GameList({ games, filter, stats }: GameListProps) {
 function StatsCard({ stats }: { stats: PlayerStats }) {
   return (
     <Card className="p-4">
-      <h3 className="font-medium mb-3">통계 요약</h3>
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-4 text-center">
-        <div>
-          <div className="text-2xl font-bold">{stats.totalGames}</div>
-          <div className="text-xs text-muted-foreground">게임</div>
-        </div>
-        <div>
-          <div className="text-2xl font-bold">
-            <span className="text-blue-600">{stats.wins}</span>
-            <span className="text-muted-foreground">/</span>
-            <span className="text-red-600">{stats.losses}</span>
-          </div>
-          <div className="text-xs text-muted-foreground">승/패</div>
-        </div>
-        <div>
-          <div className="text-2xl font-bold">{stats.winRate}%</div>
-          <div className="text-xs text-muted-foreground">승률</div>
-        </div>
+      <h3 className="font-medium mb-3">통계 요약 ({stats.totalGames}게임)</h3>
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-4 text-center">
         <div>
           <div className="text-2xl font-bold">
             <span className="text-blue-600">{stats.avgKills}</span>
