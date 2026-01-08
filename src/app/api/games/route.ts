@@ -109,11 +109,11 @@ function calculateStats(
   let totalGold = 0;
   let totalDamage = 0;
   let totalDurationSeconds = 0;
-  let wins = 0;
-  let losses = 0;
+  let playerCount = 0;
 
   for (const game of games) {
-    const matchedPlayer = game.players.find((p) => {
+    // 모든 매칭 플레이어 찾기 (라인 검색 시 여러 명 가능)
+    const matchedPlayers = game.players.filter((p) => {
       const matchSummoner = !filter.summonerName ||
         p.summonerName.toLowerCase().includes(filter.summonerName.toLowerCase());
       const matchChampion = !filter.champion ||
@@ -122,36 +122,30 @@ function calculateStats(
       return matchSummoner && matchChampion && matchLane;
     });
 
-    if (matchedPlayer) {
-      totalKills += matchedPlayer.kills;
-      totalDeaths += matchedPlayer.deaths;
-      totalAssists += matchedPlayer.assists;
-      totalGold += matchedPlayer.gold;
-      totalDamage += matchedPlayer.damage;
+    for (const player of matchedPlayers) {
+      totalKills += player.kills;
+      totalDeaths += player.deaths;
+      totalAssists += player.assists;
+      totalGold += player.gold;
+      totalDamage += player.damage;
       totalDurationSeconds += game.gameDurationSeconds || 0;
-
-      if (game.result === "승리") {
-        wins++;
-      } else {
-        losses++;
-      }
+      playerCount++;
     }
   }
 
-  const totalGames = wins + losses;
   const totalMinutes = totalDurationSeconds / 60;
 
   return {
-    totalGames,
-    wins,
-    losses,
-    winRate: totalGames > 0 ? Math.round((wins / totalGames) * 100 * 10) / 10 : 0,
+    totalGames: playerCount,
+    wins: 0,
+    losses: 0,
+    winRate: 0,
     totalKills,
     totalDeaths,
     totalAssists,
-    avgKills: totalGames > 0 ? Math.round((totalKills / totalGames) * 10) / 10 : 0,
-    avgDeaths: totalGames > 0 ? Math.round((totalDeaths / totalGames) * 10) / 10 : 0,
-    avgAssists: totalGames > 0 ? Math.round((totalAssists / totalGames) * 10) / 10 : 0,
+    avgKills: playerCount > 0 ? Math.round((totalKills / playerCount) * 10) / 10 : 0,
+    avgDeaths: playerCount > 0 ? Math.round((totalDeaths / playerCount) * 10) / 10 : 0,
+    avgAssists: playerCount > 0 ? Math.round((totalAssists / playerCount) * 10) / 10 : 0,
     avgKda: totalDeaths > 0
       ? Math.round(((totalKills + totalAssists) / totalDeaths) * 10) / 10
       : totalKills + totalAssists,
