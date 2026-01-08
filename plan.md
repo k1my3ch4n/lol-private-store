@@ -9,7 +9,7 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 | Frontend/Backend | Next.js 14 (App Router) |
 | AI API | Google Gemini API |
 | Database | PostgreSQL (Docker) |
-| ORM | Prisma |
+| DB Driver | pg (node-postgres) |
 | UI | Tailwind CSS + shadcn/ui |
 | 배포 | GCP (추후) |
 
@@ -53,7 +53,7 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 - [x] Next.js 프로젝트 생성
 - [x] Tailwind CSS + shadcn/ui 설정
 - [x] Docker Compose로 PostgreSQL 설정
-- [x] Prisma 설정 및 스키마 작성
+- [x] pg (node-postgres) 설정 및 DB 헬퍼 함수 작성
 - [x] 환경변수 설정 (.env)
 
 ### Phase 2: 이미지 업로드 기능
@@ -62,10 +62,10 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 - [x] 업로드 API 엔드포인트 (/api/upload)
 
 ### Phase 3: Gemini API 연동
-- [ ] Gemini API 클라이언트 설정
-- [ ] 이미지 분석 프롬프트 작성
-- [ ] 데이터 추출 API (/api/extract)
-- [ ] 추출 결과 파싱 로직
+- [x] Gemini API 클라이언트 설정
+- [x] 이미지 분석 프롬프트 작성
+- [x] 데이터 추출 API (/api/extract)
+- [x] 추출 결과 파싱 로직
 
 ### Phase 4: 데이터 검토/수정 UI
 - [ ] 추출된 데이터 테이블 표시
@@ -75,7 +75,7 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 
 ### Phase 5: 데이터 저장
 - [ ] 게임 데이터 저장 API (/api/games)
-- [ ] Prisma를 통한 DB 저장
+- [ ] pg를 통한 DB 저장
 - [ ] 저장 성공/실패 피드백
 
 ### Phase 6: 데이터 조회 + 필터링
@@ -91,8 +91,6 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 ```
 lol-private-store/
 ├── docker-compose.yml
-├── prisma/
-│   └── schema.prisma
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx              # 메인 (업로드)
@@ -109,7 +107,7 @@ lol-private-store/
 │   │   └── FilterPanel.tsx
 │   └── lib/
 │       ├── gemini.ts
-│       ├── prisma.ts
+│       ├── db.ts                 # pg 연결 및 쿼리 헬퍼
 │       └── types.ts
 └── .env
 ```

@@ -11,7 +11,7 @@ Next.js를 활용한 LoL 게임 결과 이미지 데이터 추출 및 아카이�
 | Styling | Tailwind CSS | 4.x |
 | UI Components | shadcn/ui | latest |
 | Database | PostgreSQL (Docker) | 16-alpine |
-| ORM | Prisma | 7.2.0 |
+| DB Driver | pg (node-postgres) | latest |
 | AI API | Google Gemini | - |
 
 ---
@@ -25,7 +25,7 @@ Next.js를 활용한 LoL 게임 결과 이미지 데이터 추출 및 아카이�
 | Next.js 프로젝트 생성 | ✅ | TypeScript + Tailwind CSS + App Router |
 | shadcn/ui 설정 | ✅ | button, input, table, card, select 컴포넌트 |
 | Docker Compose | ✅ | PostgreSQL 16 컨테이너 설정 |
-| Prisma 설정 | ✅ | Game, Player 모델 스키마 작성 |
+| pg 설정 | ✅ | node-postgres 연결 및 쿼리 헬퍼 함수 작성 |
 | 환경변수 설정 | ✅ | DATABASE_URL, GEMINI_API_KEY |
 
 ### Phase 2: 이미지 업로드 기능 ✅
@@ -74,13 +74,7 @@ GEMINI_API_KEY="your-gemini-api-key-here"
 docker-compose up -d
 ```
 
-### 4. Prisma 클라이언트 생성
-
-```bash
-npx prisma generate
-```
-
-### 5. 개발 서버 실행
+### 4. 개발 서버 실행
 
 ```bash
 npm run dev
@@ -94,8 +88,6 @@ http://localhost:3000 에서 확인
 
 ```
 lol-private-store/
-├── prisma/
-│   └── schema.prisma          # DB 스키마 (Game, Player 모델)
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx           # 메인 페이지 (이미지 업로드)
@@ -106,10 +98,9 @@ lol-private-store/
 │   │   ├── ImageUploader.tsx  # 드래그앤드롭 업로더
 │   │   └── ImagePreview.tsx   # 이미지 미리보기
 │   └── lib/
-│       ├── prisma.ts          # Prisma 클라이언트
+│       ├── db.ts              # pg 연결 및 쿼리 헬퍼
 │       └── utils.ts           # 유틸리티 함수
 ├── docker-compose.yml         # PostgreSQL 설정
-├── prisma.config.ts           # Prisma 7 설정
 ├── .env                       # 환경변수 (git 제외)
 ├── .env.example               # 환경변수 템플릿
 └── plan.md                    # 구현 계획
@@ -178,19 +169,29 @@ npx shadcn@latest add [컴포넌트명]
 
 ---
 
-## Prisma 7 주의사항
+## pg (node-postgres) 사용법
 
-Prisma 7에서는 설정 방식이 변경되었습니다:
-
-- `prisma.config.ts`: DATABASE_URL 설정 (마이그레이션, CLI용)
-- `schema.prisma`: 모델 정의만 (url 없음)
-- `PrismaClient()`: 옵션 없이 생성
+### 연결 및 쿼리
 
 ```typescript
-// src/lib/prisma.ts
-import { PrismaClient } from "@prisma/client";
+// src/lib/db.ts
+import { Pool } from "pg";
 
-export const prisma = new PrismaClient();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+// 쿼리 헬퍼 함수
+export async function query<T>(text: string, params?: unknown[]): Promise<T[]> {
+  const result = await pool.query(text, params);
+  return result.rows as T[];
+}
+
+// 단일 결과 헬퍼 함수
+export async function queryOne<T>(text: string, params?: unknown[]): Promise<T | null> {
+  const result = await pool.query(text, params);
+  return (result.rows[0] as T) ?? null;
+}
 ```
 
 ---
