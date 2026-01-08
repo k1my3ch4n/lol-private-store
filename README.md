@@ -36,15 +36,32 @@ Next.js를 활용한 LoL 게임 결과 이미지 데이터 추출 및 아카이�
 | 이미지 미리보기 | ✅ | 업로드된 이미지 프리뷰 |
 | 업로드 API | ✅ | /api/upload (Base64 변환 포함) |
 
-### Phase 3: Gemini API 연동 ⏳
+### Phase 3: Gemini API 연동 ✅
 
 | 항목 | 상태 | 설명 |
 |------|:----:|------|
-| Gemini API 클라이언트 | ⏳ | 대기 중 |
-| 이미지 분석 프롬프트 | ⏳ | 대기 중 |
-| 데이터 추출 API | ⏳ | 대기 중 |
+| Gemini API 클라이언트 | ✅ | gemini.ts 구현 완료 |
+| 이미지 분석 프롬프트 | ✅ | prompts.ts 구현 완료 |
+| 데이터 추출 API | ✅ | /api/extract 구현 완료 |
 
-### Phase 4~6: 추후 진행 예정
+### Phase 4: 데이터 검토/수정 UI ✅
+
+| 항목 | 상태 | 설명 |
+|------|:----:|------|
+| 추출 데이터 테이블 | ✅ | DataTable.tsx 구현 완료 |
+| 인라인 수정 기능 | ✅ | 각 필드 직접 수정 가능 |
+| 승/패 선택 UI | ✅ | Select 컴포넌트 활용 |
+| 저장 버튼 | ✅ | 메인 페이지에 구현 |
+
+### Phase 5: 데이터 저장 ✅
+
+| 항목 | 상태 | 설명 |
+|------|:----:|------|
+| 게임 데이터 저장 API | ✅ | /api/save 구현 완료 |
+| pg를 통한 DB 저장 | ✅ | 트랜잭션 처리 포함 |
+| 저장 성공/실패 피드백 | ✅ | UI 피드백 구현 |
+
+### Phase 6: 추후 진행 예정
 
 ---
 
@@ -88,17 +105,26 @@ http://localhost:3000 에서 확인
 
 ```
 lol-private-store/
+├── .github/
+│   └── workflows/
+│       └── ci.yml             # GitHub Actions CI
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx           # 메인 페이지 (이미지 업로드)
+│   │   ├── page.tsx           # 메인 페이지 (업로드 + 데이터 편집)
 │   │   └── api/
-│   │       └── upload/route.ts # 업로드 API
+│   │       ├── upload/route.ts  # 업로드 API
+│   │       ├── extract/route.ts # Gemini 데이터 추출 API
+│   │       └── save/route.ts    # DB 저장 API
 │   ├── components/
 │   │   ├── ui/                # shadcn/ui 컴포넌트
 │   │   ├── ImageUploader.tsx  # 드래그앤드롭 업로더
-│   │   └── ImagePreview.tsx   # 이미지 미리보기
+│   │   ├── ImagePreview.tsx   # 이미지 미리보기
+│   │   └── DataTable.tsx      # 추출 데이터 테이블
 │   └── lib/
 │       ├── db.ts              # pg 연결 및 쿼리 헬퍼
+│       ├── gemini.ts          # Gemini API 클라이언트
+│       ├── prompts.ts         # 이미지 분석 프롬프트
+│       ├── types.ts           # TypeScript 타입 정의
 │       └── utils.ts           # 유틸리티 함수
 ├── docker-compose.yml         # PostgreSQL 설정
 ├── .env                       # 환경변수 (git 제외)

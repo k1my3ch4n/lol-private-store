@@ -68,15 +68,15 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 - [x] 추출 결과 파싱 로직
 
 ### Phase 4: 데이터 검토/수정 UI
-- [ ] 추출된 데이터 테이블 표시
-- [ ] 인라인 수정 기능
-- [ ] 승/패 선택 UI
-- [ ] 저장 버튼
+- [x] 추출된 데이터 테이블 표시
+- [x] 인라인 수정 기능
+- [x] 승/패 선택 UI
+- [x] 저장 버튼
 
 ### Phase 5: 데이터 저장
-- [ ] 게임 데이터 저장 API (/api/games)
-- [ ] pg를 통한 DB 저장
-- [ ] 저장 성공/실패 피드백
+- [x] 게임 데이터 저장 API (/api/save)
+- [x] pg를 통한 DB 저장
+- [x] 저장 성공/실패 피드백
 
 ### Phase 6: 데이터 조회 + 필터링
 - [ ] 게임 목록 페이지
@@ -91,22 +91,27 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 ```
 lol-private-store/
 ├── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── ci.yml                # GitHub Actions CI
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx              # 메인 (업로드)
+│   │   ├── page.tsx              # 메인 (업로드 + 데이터 편집)
 │   │   ├── games/
-│   │   │   └── page.tsx          # 게임 목록
+│   │   │   └── page.tsx          # 게임 목록 (예정)
 │   │   └── api/
 │   │       ├── upload/route.ts
 │   │       ├── extract/route.ts
-│   │       └── games/route.ts
+│   │       └── save/route.ts
 │   ├── components/
 │   │   ├── ImageUploader.tsx
+│   │   ├── ImagePreview.tsx
 │   │   ├── DataTable.tsx
-│   │   ├── GameList.tsx
-│   │   └── FilterPanel.tsx
+│   │   ├── GameList.tsx          # (예정)
+│   │   └── FilterPanel.tsx       # (예정)
 │   └── lib/
 │       ├── gemini.ts
+│       ├── prompts.ts
 │       ├── db.ts                 # pg 연결 및 쿼리 헬퍼
 │       └── types.ts
 └── .env
