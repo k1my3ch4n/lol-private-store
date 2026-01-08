@@ -35,6 +35,7 @@ export interface ExtractResult {
 export interface GameRecord {
   id: number;
   gameTime: string;
+  gameDurationSeconds: number;
   result: string;
   createdAt: string;
 }
@@ -56,4 +57,21 @@ export interface GameFilter {
   champion: string;
   lane: string;
   result: string;
+}
+
+// 통계 요약 타입
+export interface PlayerStats {
+  totalGames: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  totalKills: number;
+  totalDeaths: number;
+  totalAssists: number;
+  avgKills: number;
+  avgDeaths: number;
+  avgAssists: number;
+  avgKda: number;
+  avgGpm: number;
+  avgDpm: number;
 }
