@@ -19,7 +19,6 @@ export const LOL_EXTRACT_PROMPT = `
    - kills: 킬 수
    - deaths: 데스 수
    - assists: 어시스트 수
-   - kda: KDA 수치 (표시된 경우, 없으면 null)
    - damage: 피해량 (숫자만)
    - gold: 골드 (숫자만)
 
@@ -43,7 +42,6 @@ export const LOL_EXTRACT_PROMPT = `
       "kills": 4,
       "deaths": 7,
       "assists": 3,
-      "kda": 1.0,
       "damage": 9155,
       "gold": 9674
     }

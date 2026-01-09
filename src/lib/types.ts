@@ -10,9 +10,14 @@ export interface PlayerData {
   kills: number;
   deaths: number;
   assists: number;
-  kda: number | null;
   damage: number;
   gold: number;
+}
+
+// KDA 계산 함수
+export function calculateKda(kills: number, deaths: number, assists: number): number {
+  if (deaths === 0) return kills + assists;
+  return Math.round(((kills + assists) / deaths) * 100) / 100;
 }
 
 // 게임 데이터 타입

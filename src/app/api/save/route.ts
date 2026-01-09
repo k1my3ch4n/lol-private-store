@@ -45,9 +45,9 @@ export async function POST(request: NextRequest) {
       await client.query(
         `INSERT INTO "Player"
          ("gameId", "team", "lane", "level", "champion", "summonerName",
-          "spell1", "spell2", "kills", "deaths", "assists", "kda",
+          "spell1", "spell2", "kills", "deaths", "assists",
           "damage", "gold")
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
         [
           gameId,
           player.team,
@@ -60,7 +60,6 @@ export async function POST(request: NextRequest) {
           player.kills,
           player.deaths,
           player.assists,
-          player.kda,
           player.damage,
           player.gold,
         ]
