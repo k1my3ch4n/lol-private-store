@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     // 플레이어 정보 조회
     const playersQuery = `
       SELECT id, "gameId", team, lane, level, champion, "summonerName",
-             spell1, spell2, kills, deaths, assists, kda, damage, gold
+             spell1, spell2, kills, deaths, assists, damage, gold
       FROM "Player"
       WHERE "gameId" = ANY($1)
       ORDER BY "gameId", team, id

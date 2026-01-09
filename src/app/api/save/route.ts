@@ -30,12 +30,17 @@ export async function POST(request: NextRequest) {
     // 게임 시간 초 단위 변환
     const gameDurationSeconds = gameTimeToSeconds(gameData.gameTime);
 
+    // 게임 날짜 처리 (입력값이 없으면 현재 시간 사용)
+    const createdAt = gameData.gameDate
+      ? new Date(gameData.gameDate)
+      : new Date();
+
     // Game 저장
     const gameResult = await client.query(
       `INSERT INTO "Game" ("gameTime", "gameDurationSeconds", "result", "createdAt")
-       VALUES ($1, $2, $3, NOW())
+       VALUES ($1, $2, $3, $4)
        RETURNING id`,
-      [gameData.gameTime, gameDurationSeconds, gameData.result]
+      [gameData.gameTime, gameDurationSeconds, gameData.result, createdAt]
     );
 
     const gameId = gameResult.rows[0].id;
@@ -45,9 +50,9 @@ export async function POST(request: NextRequest) {
       await client.query(
         `INSERT INTO "Player"
          ("gameId", "team", "lane", "level", "champion", "summonerName",
-          "spell1", "spell2", "kills", "deaths", "assists", "kda",
+          "spell1", "spell2", "kills", "deaths", "assists",
           "damage", "gold")
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
         [
           gameId,
           player.team,
@@ -60,7 +65,6 @@ export async function POST(request: NextRequest) {
           player.kills,
           player.deaths,
           player.assists,
-          player.kda,
           player.damage,
           player.gold,
         ]

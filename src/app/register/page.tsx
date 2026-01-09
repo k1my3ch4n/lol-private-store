@@ -18,12 +18,23 @@ export default function RegisterPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  const resetAll = () => {
+    setSelectedFile(null);
+    setPreview(null);
+    setBase64(null);
+    setMimeType(null);
+    setExtractedData(null);
+    setError(null);
+    setSaveSuccess(false);
+  };
+
   const handleImageSelect = (file: File, previewUrl: string) => {
     setSelectedFile(file);
     setPreview(previewUrl);
     setMimeType(file.type);
     setExtractedData(null);
     setError(null);
+    setSaveSuccess(false);
 
     // Base64 추출
     const base64Data = previewUrl.split(",")[1];
@@ -31,12 +42,7 @@ export default function RegisterPage() {
   };
 
   const handleRemove = () => {
-    setSelectedFile(null);
-    setPreview(null);
-    setBase64(null);
-    setMimeType(null);
-    setExtractedData(null);
-    setError(null);
+    resetAll();
   };
 
   const handleExtract = async () => {
@@ -83,19 +89,32 @@ export default function RegisterPage() {
     setError(null);
     setSaveSuccess(false);
 
+    // 정글 플레이어의 spell1을 "강타"로 고정
+    const normalizedData = {
+      ...extractedData,
+      players: extractedData.players.map((player) => ({
+        ...player,
+        spell1: player.lane === "정글" ? "강타" : player.spell1,
+      })),
+    };
+
     try {
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(extractedData),
+        body: JSON.stringify(normalizedData),
       });
 
       const result = await response.json();
 
       if (result.success) {
         setSaveSuccess(true);
+        // 1.5초 후 초기화
+        setTimeout(() => {
+          resetAll();
+        }, 1500);
       } else {
         setError(result.error || "데이터 저장에 실패했습니다.");
       }

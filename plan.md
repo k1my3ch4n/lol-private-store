@@ -40,7 +40,7 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 | kills | Int | 킬 |
 | deaths | Int | 데스 |
 | assists | Int | 어시스트 |
-| kda | Float | KDA (nullable) |
+| ~~kda~~ | ~~Float~~ | ~~KDA (nullable)~~ - 삭제됨, 조회 시 계산 |
 | damage | Int | 피해량 |
 | gold | Int | 골드 |
 
@@ -81,10 +81,18 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 - [x] 저장 성공/실패 피드백
 
 ### Phase 6: 데이터 조회 + 필터링
-- [ ] 게임 목록 페이지
-- [ ] 필터링 UI (챔피언, 라인, 승/패, 소환사명)
+- [x] 게임 목록 페이지
+- [x] 필터링 UI (챔피언, 라인, 승/패, 소환사명)
+- [x] 라인 아이콘 커스텀 드롭다운
 - [ ] 상세 보기 모달/페이지
 - [ ] 페이지네이션
+
+### Phase 7: UI/UX 개선
+- [x] 라인 아이콘 컴포넌트 (LaneIcon)
+- [x] 게임 등록 후 자동 초기화
+- [x] 게임 날짜 입력 기능 (미입력 시 등록일로 자동 설정)
+- [ ] 다크 모드 지원
+- [ ] 반응형 디자인 개선
 
 ---
 
@@ -109,13 +117,18 @@ lol-private-store/
 │   │   ├── ImageUploader.tsx
 │   │   ├── ImagePreview.tsx
 │   │   ├── DataTable.tsx
-│   │   ├── GameList.tsx          # (예정)
-│   │   └── FilterPanel.tsx       # (예정)
+│   │   ├── GameList.tsx
+│   │   ├── GameFilter.tsx
+│   │   ├── LaneIcon.tsx
+│   │   └── ui/                   # shadcn/ui 컴포넌트
 │   └── lib/
 │       ├── gemini.ts
 │       ├── prompts.ts
 │       ├── db.ts                 # pg 연결 및 쿼리 헬퍼
+│       ├── utils.ts
 │       └── types.ts
+├── public/
+│   └── icons/                    # 라인 아이콘 SVG 파일
 └── .env
 ```
 
@@ -123,6 +136,15 @@ lol-private-store/
 
 ## 진행 순서
 
-**Phase 1** → **Phase 2** → **Phase 3** → **Phase 4** → **Phase 5** → **Phase 6**
+**Phase 1** → **Phase 2** → **Phase 3** → **Phase 4** → **Phase 5** → **Phase 6** → **Phase 7**
 
 각 Phase 완료 후 동작 확인하며 진행
+
+---
+
+## 최근 업데이트
+
+- 라인 아이콘 적용 (GameList, DataTable, GameFilter)
+- 게임 필터 드롭다운에 라인 아이콘 포함
+- 게임 등록 후 자동 초기화 기능
+- 게임 날짜 입력 기능 추가

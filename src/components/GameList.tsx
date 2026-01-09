@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/table";
 import { GameWithPlayers, GameFilter, PlayerStats } from "@/lib/types";
 import { calculateGpm, calculateDpm } from "@/lib/utils";
+
+import { LaneIcon } from "./LaneIcon";
 
 interface GameListProps {
   games: GameWithPlayers[];
@@ -110,7 +112,7 @@ export function GameList({ games, filter, stats }: GameListProps) {
                         </span>
                       </TableCell>
                       <TableCell className="font-medium text-sm">{player.champion}</TableCell>
-                      <TableCell className="text-sm">{player.lane}</TableCell>
+                      <TableCell><LaneIcon lane={player.lane} size={20} /></TableCell>
                       <TableCell className="text-sm">{player.summonerName}</TableCell>
                       <TableCell className="text-sm">
                         <span className="text-blue-600">{player.kills}</span>
@@ -160,9 +162,8 @@ export function GameList({ games, filter, stats }: GameListProps) {
         </TableHeader>
         <TableBody>
           {games.map((game) => (
-            <>
+            <Fragment key={game.id}>
               <TableRow
-                key={game.id}
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() =>
                   setExpandedId(expandedId === game.id ? null : game.id)
@@ -189,13 +190,13 @@ export function GameList({ games, filter, stats }: GameListProps) {
               </TableRow>
 
               {expandedId === game.id && (
-                <TableRow key={`${game.id}-detail`}>
+                <TableRow>
                   <TableCell colSpan={4} className="bg-muted/30 p-4">
                     <GameDetail game={game} />
                   </TableCell>
                 </TableRow>
               )}
-            </>
+            </Fragment>
           ))}
         </TableBody>
       </Table>
@@ -281,7 +282,7 @@ function TeamTable({
 
             return (
               <TableRow key={player.id}>
-                <TableCell className="text-sm">{player.lane}</TableCell>
+                <TableCell><LaneIcon lane={player.lane} size={20} /></TableCell>
                 <TableCell className="text-sm font-medium">
                   {player.champion}
                 </TableCell>
