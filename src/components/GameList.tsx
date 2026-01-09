@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -162,9 +162,8 @@ export function GameList({ games, filter, stats }: GameListProps) {
         </TableHeader>
         <TableBody>
           {games.map((game) => (
-            <>
+            <Fragment key={game.id}>
               <TableRow
-                key={game.id}
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() =>
                   setExpandedId(expandedId === game.id ? null : game.id)
@@ -191,13 +190,13 @@ export function GameList({ games, filter, stats }: GameListProps) {
               </TableRow>
 
               {expandedId === game.id && (
-                <TableRow key={`${game.id}-detail`}>
+                <TableRow>
                   <TableCell colSpan={4} className="bg-muted/30 p-4">
                     <GameDetail game={game} />
                   </TableCell>
                 </TableRow>
               )}
-            </>
+            </Fragment>
           ))}
         </TableBody>
       </Table>
