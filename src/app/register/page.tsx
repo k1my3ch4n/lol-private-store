@@ -83,13 +83,22 @@ export default function RegisterPage() {
     setError(null);
     setSaveSuccess(false);
 
+    // 정글 플레이어의 spell1을 "강타"로 고정
+    const normalizedData = {
+      ...extractedData,
+      players: extractedData.players.map((player) => ({
+        ...player,
+        spell1: player.lane === "정글" ? "강타" : player.spell1,
+      })),
+    };
+
     try {
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(extractedData),
+        body: JSON.stringify(normalizedData),
       });
 
       const result = await response.json();

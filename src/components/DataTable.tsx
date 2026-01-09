@@ -174,19 +174,21 @@ function PlayerTable({ players, onPlayerChange }: PlayerTableProps) {
               </TableCell>
               <TableCell>
                 <Input
-                  value={player.spell1}
+                  value={player.lane === "정글" ? "강타" : player.spell1}
                   onChange={(e) =>
                     onPlayerChange(originalIndex, "spell1", e.target.value)
                   }
-                  className="w-20 h-8 text-xs"
+                  readOnly={player.lane === "정글"}
+                  className={`w-20 h-8 text-xs ${player.lane === "정글" ? "bg-muted" : ""}`}
                 />
               </TableCell>
               <TableCell>
                 <Input
-                  value={player.spell2}
-                  onChange={(e) =>
-                    onPlayerChange(originalIndex, "spell2", e.target.value)
-                  }
+                  value={player.lane === "정글" && player.spell2 === "강타" ? "" : player.spell2}
+                  onChange={(e) => {
+                    if (player.lane === "정글" && e.target.value === "강타") return;
+                    onPlayerChange(originalIndex, "spell2", e.target.value);
+                  }}
                   className="w-20 h-8 text-xs"
                 />
               </TableCell>
