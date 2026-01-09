@@ -3,6 +3,7 @@
 import { GameData, PlayerData } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LaneIcon } from "./LaneIcon";
 import {
   Table,
   TableBody,
@@ -135,13 +136,7 @@ function PlayerTable({ players, onPlayerChange }: PlayerTableProps) {
           {players.map(({ player, originalIndex }) => (
             <TableRow key={originalIndex}>
               <TableCell>
-                <Input
-                  value={player.lane}
-                  onChange={(e) =>
-                    onPlayerChange(originalIndex, "lane", e.target.value)
-                  }
-                  className="w-16 h-8 text-xs"
-                />
+                <LaneIcon lane={player.lane} size={24} />
               </TableCell>
               <TableCell>
                 <Input
