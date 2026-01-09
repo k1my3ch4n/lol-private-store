@@ -1,11 +1,6 @@
-import { FC, SVGProps } from "react";
-import {
-  TopIcon,
-  JungleIcon,
-  MidIcon,
-  BotIcon,
-  SupportIcon,
-} from "@/assets/icons";
+"use client";
+
+import Image from "next/image";
 
 interface LaneIconProps {
   lane: string;
@@ -13,27 +8,29 @@ interface LaneIconProps {
   className?: string;
 }
 
-const laneToIcon: Record<string, FC<SVGProps<SVGSVGElement>>> = {
-  "탑": TopIcon,
-  "정글": JungleIcon,
-  "미드": MidIcon,
-  "원딜": BotIcon,
-  "서폿": SupportIcon,
+const laneToIcon: Record<string, string> = {
+  "탑": "/icons/icon-position-top.svg",
+  "정글": "/icons/icon-position-jungle.svg",
+  "미드": "/icons/icon-position-middle.svg",
+  "원딜": "/icons/icon-position-bottom.svg",
+  "서폿": "/icons/icon-position-utility.svg",
 };
 
 export function LaneIcon({ lane, size = 20, className }: LaneIconProps) {
-  const IconComponent = laneToIcon[lane];
+  const iconPath = laneToIcon[lane];
 
-  if (!IconComponent) {
+  if (!iconPath) {
     return <span className={className}>{lane}</span>;
   }
 
   return (
-    <IconComponent
+    <Image
+      src={iconPath}
+      alt={lane}
       width={size}
       height={size}
       className={className}
-      aria-label={lane}
+      title={lane}
     />
   );
 }
