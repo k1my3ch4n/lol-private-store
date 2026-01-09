@@ -1,6 +1,6 @@
 "use client";
 
-import { GameData, PlayerData, calculateKda } from "@/lib/types";
+import { GameData, PlayerData } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -127,7 +127,6 @@ function PlayerTable({ players, onPlayerChange }: PlayerTableProps) {
             <TableHead className="w-14">K</TableHead>
             <TableHead className="w-14">D</TableHead>
             <TableHead className="w-14">A</TableHead>
-            <TableHead className="w-16">KDA</TableHead>
             <TableHead className="w-20">피해량</TableHead>
             <TableHead className="w-20">골드</TableHead>
           </TableRow>
@@ -221,11 +220,6 @@ function PlayerTable({ players, onPlayerChange }: PlayerTableProps) {
                   }
                   className="w-14 h-8 text-xs"
                 />
-              </TableCell>
-              <TableCell>
-                <span className="text-xs px-2">
-                  {calculateKda(player.kills, player.deaths, player.assists).toFixed(2)}
-                </span>
               </TableCell>
               <TableCell>
                 <Input
