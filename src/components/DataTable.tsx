@@ -113,7 +113,6 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
             <TableHead className="w-16">KDA</TableHead>
             <TableHead className="w-20">피해량</TableHead>
             <TableHead className="w-20">골드</TableHead>
-            <TableHead className="w-16">시야</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -239,20 +238,6 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                       onPlayerChange(actualIndex, "gold", parseInt(e.target.value) || 0)
                     }
                     className="w-20 h-8 text-xs"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="number"
-                    value={player.vision ?? ""}
-                    onChange={(e) =>
-                      onPlayerChange(
-                        actualIndex,
-                        "vision",
-                        e.target.value ? parseInt(e.target.value) : null
-                      )
-                    }
-                    className="w-16 h-8 text-xs"
                   />
                 </TableCell>
               </TableRow>

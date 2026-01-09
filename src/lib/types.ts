@@ -13,7 +13,6 @@ export interface PlayerData {
   kda: number | null;
   damage: number;
   gold: number;
-  vision: number | null;
 }
 
 // 게임 데이터 타입
