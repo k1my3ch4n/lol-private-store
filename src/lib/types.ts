@@ -15,7 +15,11 @@ export interface PlayerData {
 }
 
 // KDA 계산 함수
-export function calculateKda(kills: number, deaths: number, assists: number): number {
+export function calculateKda(
+  kills: number,
+  deaths: number,
+  assists: number
+): number {
   if (deaths === 0) return kills + assists;
   return Math.round(((kills + assists) / deaths) * 100) / 100;
 }
@@ -24,6 +28,7 @@ export function calculateKda(kills: number, deaths: number, assists: number): nu
 export interface GameData {
   gameTime: string; // "27:17"
   result: string; // "승리" 또는 "패배"
+  gameDate?: string;
   players: PlayerData[];
 }
 

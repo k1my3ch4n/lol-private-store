@@ -55,7 +55,16 @@ export function DataTable({ data, onChange }: DataTableProps) {
     <Card className="p-6">
       <div className="space-y-6">
         {/* 게임 정보 */}
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center flex-wrap">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">게임 날짜:</span>
+            <Input
+              type="date"
+              value={data.gameDate || ""}
+              onChange={(e) => handleGameChange("gameDate", e.target.value)}
+              className="w-40"
+            />
+          </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">게임 시간:</span>
             <Input
