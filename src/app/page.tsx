@@ -1,167 +1,35 @@
-"use client";
-
-import { useState } from "react";
-import { ImageUploader } from "@/components/ImageUploader";
-import { ImagePreview } from "@/components/ImagePreview";
-import { DataTable } from "@/components/DataTable";
-import { GameData } from "@/lib/types";
+import Link from "next/link";
 
 export default function Home() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [base64, setBase64] = useState<string | null>(null);
-  const [mimeType, setMimeType] = useState<string | null>(null);
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [extractedData, setExtractedData] = useState<GameData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
-  const handleImageSelect = (file: File, previewUrl: string) => {
-    setSelectedFile(file);
-    setPreview(previewUrl);
-    setMimeType(file.type);
-    setExtractedData(null);
-    setError(null);
-
-    // Base64 추출
-    const base64Data = previewUrl.split(",")[1];
-    setBase64(base64Data);
-  };
-
-  const handleRemove = () => {
-    setSelectedFile(null);
-    setPreview(null);
-    setBase64(null);
-    setMimeType(null);
-    setExtractedData(null);
-    setError(null);
-  };
-
-  const handleExtract = async () => {
-    if (!base64 || !mimeType) return;
-
-    setIsExtracting(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ base64, mimeType }),
-      });
-
-      const result = await response.json();
-
-      if (result.success && result.data) {
-        setExtractedData(result.data);
-      } else {
-        setError(result.error || "데이터 추출에 실패했습니다.");
-        if (result.rawResponse) {
-          console.log("Raw Response:", result.rawResponse);
-        }
-      }
-    } catch (err) {
-      console.error("추출 실패:", err);
-      setError("데이터 추출 중 오류가 발생했습니다.");
-    } finally {
-      setIsExtracting(false);
-    }
-  };
-
-  const handleDataChange = (newData: GameData) => {
-    setExtractedData(newData);
-  };
-
-  const handleSave = async () => {
-    if (!extractedData) return;
-
-    setIsSaving(true);
-    setError(null);
-    setSaveSuccess(false);
-
-    try {
-      const response = await fetch("/api/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(extractedData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSaveSuccess(true);
-      } else {
-        setError(result.error || "데이터 저장에 실패했습니다.");
-      }
-    } catch (err) {
-      console.error("저장 실패:", err);
-      setError("데이터 저장 중 오류가 발생했습니다.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 px-4 max-w-6xl">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold">LoL 사설 게임 데이터 아카이브</h1>
-          <p className="text-muted-foreground mt-2">
-            게임 결과 스크린샷을 업로드하여 데이터를 추출하고 저장하세요
-          </p>
-        </header>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <div className="text-center space-y-8">
+        <h1 className="text-5xl md:text-6xl font-bold">
+          LoL 사설 게임
+          <br />
+          데이터 아카이브
+        </h1>
 
-        <main className="space-y-6">
-          {!preview ? (
-            <ImageUploader onImageSelect={handleImageSelect} />
-          ) : (
-            <>
-              <ImagePreview
-                preview={preview}
-                fileName={selectedFile?.name || ""}
-                onRemove={handleRemove}
-                onExtract={handleExtract}
-                isExtracting={isExtracting}
-              />
+        <p className="text-lg md:text-xl text-muted-foreground max-w-md mx-auto">
+          게임 결과 스크린샷에서 <span className="text-primary">AI</span>로 데이터를 추출하고,
+          <br />
+          저장된 기록을 검색하고 통계를 확인하세요.
+        </p>
 
-              {error && (
-                <div className="p-4 bg-destructive/10 text-destructive rounded-lg">
-                  {error}
-                </div>
-              )}
-
-              {extractedData && (
-                <>
-                  <DataTable
-                    data={extractedData}
-                    onChange={handleDataChange}
-                  />
-
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={handleSave}
-                      disabled={isSaving || saveSuccess}
-                      className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {isSaving ? "저장 중..." : saveSuccess ? "저장 완료" : "DB에 저장"}
-                    </button>
-
-                    {saveSuccess && (
-                      <span className="text-green-600 font-medium">
-                        데이터가 성공적으로 저장되었습니다!
-                      </span>
-                    )}
-                  </div>
-                </>
-              )}
-            </>
-          )}
-        </main>
+        <div className="flex flex-col md:flex-row gap-4 justify-center">
+          <Link
+            href="/register"
+            className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-lg"
+          >
+            게임 등록
+          </Link>
+          <Link
+            href="/games"
+            className="px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors text-lg"
+          >
+            기록 조회
+          </Link>
+        </div>
       </div>
     </div>
   );

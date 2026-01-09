@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 
 interface ImageUploaderProps {
@@ -10,6 +9,7 @@ interface ImageUploaderProps {
 
 export function ImageUploader({ onImageSelect }: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(
     (file: File) => {
@@ -61,6 +61,35 @@ export function ImageUploader({ onImageSelect }: ImageUploaderProps) {
     [handleFile]
   );
 
+  const handleClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handlePaste = useCallback(
+    (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            handleFile(file);
+            break;
+          }
+        }
+      }
+    },
+    [handleFile]
+  );
+
+  useEffect(() => {
+    document.addEventListener("paste", handlePaste);
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [handlePaste]);
+
   return (
     <Card
       className={`p-8 border-2 border-dashed transition-colors cursor-pointer ${
@@ -68,6 +97,7 @@ export function ImageUploader({ onImageSelect }: ImageUploaderProps) {
           ? "border-primary bg-primary/5"
           : "border-muted-foreground/25 hover:border-primary/50"
       }`}
+      onClick={handleClick}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -79,21 +109,16 @@ export function ImageUploader({ onImageSelect }: ImageUploaderProps) {
             LoL 게임 결과 스크린샷을 업로드하세요
           </p>
           <p className="text-sm text-muted-foreground mt-1">
-            드래그 앤 드롭 또는 클릭하여 파일 선택
+            클릭, 드래그 앤 드롭, 또는 Ctrl+V로 이미지 붙여넣기
           </p>
         </div>
         <input
+          ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleFileInput}
           className="hidden"
-          id="image-upload"
         />
-        <Button asChild variant="outline">
-          <label htmlFor="image-upload" className="cursor-pointer">
-            파일 선택
-          </label>
-        </Button>
       </div>
     </Card>
   );

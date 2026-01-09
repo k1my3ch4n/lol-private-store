@@ -43,7 +43,6 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 | kda | Float | KDA (nullable) |
 | damage | Int | 피해량 |
 | gold | Int | 골드 |
-| vision | Int | 시야점수 (nullable) |
 
 ---
 
@@ -60,6 +59,9 @@ Next.js를 활용하여 LoL 게임 결과 이미지에서 데이터를 추출하
 - [x] 이미지 업로드 UI 컴포넌트
 - [x] 이미지 미리보기 기능
 - [x] 업로드 API 엔드포인트 (/api/upload)
+- [x] 드래그 앤 드롭 지원
+- [x] 클릭하여 파일 선택
+- [x] 복사/붙여넣기(Ctrl+V) 지원
 
 ### Phase 3: Gemini API 연동
 - [x] Gemini API 클라이언트 설정

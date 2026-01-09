@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { GameData } from "@/lib/types";
+import { gameTimeToSeconds } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   const client = await pool.connect();
@@ -26,12 +27,15 @@ export async function POST(request: NextRequest) {
     // 트랜잭션 시작
     await client.query("BEGIN");
 
+    // 게임 시간 초 단위 변환
+    const gameDurationSeconds = gameTimeToSeconds(gameData.gameTime);
+
     // Game 저장
     const gameResult = await client.query(
-      `INSERT INTO "Game" ("gameTime", "result", "createdAt")
-       VALUES ($1, $2, NOW())
+      `INSERT INTO "Game" ("gameTime", "gameDurationSeconds", "result", "createdAt")
+       VALUES ($1, $2, $3, NOW())
        RETURNING id`,
-      [gameData.gameTime, gameData.result]
+      [gameData.gameTime, gameDurationSeconds, gameData.result]
     );
 
     const gameId = gameResult.rows[0].id;
@@ -42,8 +46,8 @@ export async function POST(request: NextRequest) {
         `INSERT INTO "Player"
          ("gameId", "team", "lane", "level", "champion", "summonerName",
           "spell1", "spell2", "kills", "deaths", "assists", "kda",
-          "damage", "gold", "vision")
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+          "damage", "gold")
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
         [
           gameId,
           player.team,
@@ -59,7 +63,6 @@ export async function POST(request: NextRequest) {
           player.kda,
           player.damage,
           player.gold,
-          player.vision,
         ]
       );
     }

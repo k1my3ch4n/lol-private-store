@@ -22,7 +22,6 @@ export const LOL_EXTRACT_PROMPT = `
    - kda: KDA 수치 (표시된 경우, 없으면 null)
    - damage: 피해량 (숫자만)
    - gold: 골드 (숫자만)
-   - vision: 시야 점수 (표시된 경우, 없으면 null)
 
 ## 응답 형식
 
@@ -46,8 +45,7 @@ export const LOL_EXTRACT_PROMPT = `
       "assists": 3,
       "kda": 1.0,
       "damage": 9155,
-      "gold": 9674,
-      "vision": 355
+      "gold": 9674
     }
     // ... 나머지 9명의 플레이어
   ]

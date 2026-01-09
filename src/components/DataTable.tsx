@@ -102,18 +102,17 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
         <TableHeader>
           <TableRow>
             <TableHead className="w-16">라인</TableHead>
-            <TableHead className="w-12">Lv</TableHead>
+            <TableHead className="w-14">Lv</TableHead>
             <TableHead>챔피언</TableHead>
             <TableHead>소환사명</TableHead>
             <TableHead className="w-20">스펠1</TableHead>
             <TableHead className="w-20">스펠2</TableHead>
-            <TableHead className="w-12">K</TableHead>
-            <TableHead className="w-12">D</TableHead>
-            <TableHead className="w-12">A</TableHead>
+            <TableHead className="w-14">K</TableHead>
+            <TableHead className="w-14">D</TableHead>
+            <TableHead className="w-14">A</TableHead>
             <TableHead className="w-16">KDA</TableHead>
             <TableHead className="w-20">피해량</TableHead>
             <TableHead className="w-20">골드</TableHead>
-            <TableHead className="w-16">시야</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -137,7 +136,7 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                     onChange={(e) =>
                       onPlayerChange(actualIndex, "level", parseInt(e.target.value) || 0)
                     }
-                    className="w-12 h-8 text-xs"
+                    className="w-14 h-8 text-xs"
                   />
                 </TableCell>
                 <TableCell>
@@ -183,7 +182,7 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                     onChange={(e) =>
                       onPlayerChange(actualIndex, "kills", parseInt(e.target.value) || 0)
                     }
-                    className="w-12 h-8 text-xs"
+                    className="w-14 h-8 text-xs"
                   />
                 </TableCell>
                 <TableCell>
@@ -193,7 +192,7 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                     onChange={(e) =>
                       onPlayerChange(actualIndex, "deaths", parseInt(e.target.value) || 0)
                     }
-                    className="w-12 h-8 text-xs"
+                    className="w-14 h-8 text-xs"
                   />
                 </TableCell>
                 <TableCell>
@@ -203,7 +202,7 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                     onChange={(e) =>
                       onPlayerChange(actualIndex, "assists", parseInt(e.target.value) || 0)
                     }
-                    className="w-12 h-8 text-xs"
+                    className="w-14 h-8 text-xs"
                   />
                 </TableCell>
                 <TableCell>
@@ -239,20 +238,6 @@ function PlayerTable({ players, startIndex, onPlayerChange }: PlayerTableProps) 
                       onPlayerChange(actualIndex, "gold", parseInt(e.target.value) || 0)
                     }
                     className="w-20 h-8 text-xs"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Input
-                    type="number"
-                    value={player.vision ?? ""}
-                    onChange={(e) =>
-                      onPlayerChange(
-                        actualIndex,
-                        "vision",
-                        e.target.value ? parseInt(e.target.value) : null
-                      )
-                    }
-                    className="w-16 h-8 text-xs"
                   />
                 </TableCell>
               </TableRow>
